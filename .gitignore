@@ -1,0 +1,8 @@
+# Secrets: never in Git
+.env
+*.pem
+*.key
+
+# Python leftovers
+__pycache__/
+.venv/
