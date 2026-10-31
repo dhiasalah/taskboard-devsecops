@@ -1,1 +1,43 @@
-<h1>TaskBoard is coming soon</h1>
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <title>TaskBoard</title>
+</head>
+<body>
+  <h1>TaskBoard</h1>
+  <form id="form">
+    <input id="title" placeholder="New task" required>
+    <button>Add</button>
+  </form>
+  <ul id="tasks"></ul>
+  <script>
+    const list = document.getElementById("tasks");
+    const form = document.getElementById("form");
+    const title = document.getElementById("title");
+
+    async function load() {
+      const tasks = await (await fetch("/api/tasks")).json();
+      list.replaceChildren(...tasks.map(task => {
+        const item = document.createElement("li");
+        item.textContent = task.title;
+        return item;
+      }));
+    }
+
+    form.onsubmit = async event => {
+      event.preventDefault();
+      await fetch("/api/tasks", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ title: title.value }),
+      });
+      title.value = "";
+      load();
+    };
+
+    load();
+  </script>
+</body>
+</html>
+

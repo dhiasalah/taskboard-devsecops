@@ -25,3 +25,10 @@
 ## Lesson 05 — Git & GitHub (2026-10-31)
 - Project: the repo went public on GitHub, with a `.gitignore` for secrets and a finished README.
 - Security note: commits use my GitHub noreply address, so my real email stays private.
+
+## Lesson 06 — Containers & Docker (2026-10-31)
+- Learned: images vs containers, ports, volumes, bind mounts, Docker networks. Containers lose their files when removed, volumes don't.
+- Broke: `git status` failed with `Unable to read current working directory` on `/mnt/c`.
+- Fixed: my terminal had lost its link to the folder. A fresh `cd` into the project fixed it.
+- Security note: `docker inspect` shows passwords passed with `-e`. The database has no published port, so only containers on its network can reach it.
+- Project: `scripts/taskboard-up.sh` starts the web server and database, following my network plan.
