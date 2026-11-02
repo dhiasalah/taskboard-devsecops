@@ -45,3 +45,15 @@
 - Fixed: used `curl.exe`, found the cause with `Get-Alias curl`, and renamed the images.
 - Security note: split `web` and `db` onto separate networks, so `web` can't even find the database. Trivy on the API: 0 CRITICAL, 5 HIGH in Python install tools. Web image: 0.
 - Project: one command starts TaskBoard. From now on I work in PowerShell and VS Code.
+
+## Lesson 09 — Why Kubernetes? (2026-11-02)
+- Learned: desired state, actual state, and the parts of a cluster.
+- Broke: on purpose, I killed the API and tried to scale it. Compose didn't bring it back, and the port was already taken.
+- Fixed: first I thought the kubelet remembers what you ask for. It's etcd. And a leaked `kubeconfig` needs its key revoked, not a shutdown.
+- Project: v0.1 is released, with my images on Docker Hub.
+
+## Lesson 10 — kubectl + kind, first cluster (2026-11-02)
+- Learned: kind runs each Kubernetes node as a Docker container, and `kubectl` talks to the API server.
+- Fixed: I didn't know what kind can't do. All 3 nodes live on one laptop, so one failure stops them all.
+- Security note: `kubeconfig` is a password, so it stays out of Git. If it leaks, revoke the key first.
+- Project: the cluster is now a file, `k8s/kind-config.yaml`, so one command rebuilds it. ADR-002 says why I chose kind.
