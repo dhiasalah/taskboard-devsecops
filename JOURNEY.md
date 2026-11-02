@@ -32,3 +32,16 @@
 - Fixed: my terminal had lost its link to the folder. A fresh `cd` into the project fixed it.
 - Security note: `docker inspect` shows passwords passed with `-e`. The database has no published port, so only containers on its network can reach it.
 - Project: `scripts/taskboard-up.sh` starts the web server and database, following my network plan.
+
+## Lesson 07 — Dockerfile (2026-11-02)
+- Learned: Dockerfiles, layers and the build cache, RUN vs CMD, non-root users, Trivy scans.
+- Broke: my first quiz try was 5/10, mostly on published ports and the cache order.
+- Fixed: went through them again. An arrow means published, `0.0.0.0` means every address, and no arrow means only the container's network.
+- Project: wrote the API, the web page and their Dockerfiles. TaskBoard now really saves tasks.
+
+## Lesson 08 — YAML + Docker Compose + Docker Hub (2026-11-02)
+- Learned: YAML, Compose services, healthchecks, and how a port with no address opens to everyone.
+- Broke: in PowerShell, `curl` ran `Invoke-WebRequest` instead of the real curl. I also built my images with the placeholder name `YOURNAME`.
+- Fixed: used `curl.exe`, found the cause with `Get-Alias curl`, and renamed the images.
+- Security note: split `web` and `db` onto separate networks, so `web` can't even find the database. Trivy on the API: 0 CRITICAL, 5 HIGH in Python install tools. Web image: 0.
+- Project: one command starts TaskBoard. From now on I work in PowerShell and VS Code.

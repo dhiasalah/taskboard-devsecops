@@ -1,0 +1,69 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 900 520" width="900" height="520" font-family="Segoe UI, Arial, sans-serif">
+  <defs>
+    <filter id="sh" x="-30%" y="-30%" width="160%" height="160%">
+      <feDropShadow dx="0" dy="3" stdDeviation="4" flood-color="#0F172A" flood-opacity="0.18"/>
+    </filter>
+    <marker id="arrG" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse">
+      <path d="M0 0 L10 5 L0 10 Z" fill="#10B981"/>
+    </marker>
+  </defs>
+
+  <rect width="900" height="520" rx="20" fill="#F8FAFC"/>
+  <text x="450" y="42" text-anchor="middle" font-size="28" font-weight="700" fill="#1E293B">TaskBoard v0.1 architecture</text>
+  <text x="450" y="68" text-anchor="middle" font-size="15" fill="#475569">Three containers, two private networks, and only two doors on your laptop.</text>
+
+  <!-- Browser -->
+  <rect x="24" y="186" width="150" height="104" rx="14" fill="#FEF3C7" stroke="#F59E0B" stroke-width="2" filter="url(#sh)"/>
+  <text x="99" y="224" text-anchor="middle" font-size="26">🌐</text>
+  <text x="99" y="254" text-anchor="middle" font-size="16" font-weight="700" fill="#1E293B">Your browser</text>
+  <text x="99" y="274" text-anchor="middle" font-size="13" fill="#475569">on your laptop</text>
+
+  <!-- Networks -->
+  <rect x="268" y="122" width="376" height="266" rx="16" fill="#DBEAFE" fill-opacity="0.6" stroke="#326CE5" stroke-width="2" stroke-dasharray="7 5"/>
+  <text x="284" y="378" font-size="15" font-weight="700" font-family="Consolas, monospace" fill="#1D4ED8">front network</text>
+  <rect x="486" y="164" width="392" height="308" rx="16" fill="#EDE9FE" fill-opacity="0.6" stroke="#8B5CF6" stroke-width="2" stroke-dasharray="7 5"/>
+  <text x="504" y="458" font-size="15" font-weight="700" font-family="Consolas, monospace" fill="#6D28D9">back network</text>
+
+  <!-- Web -->
+  <rect x="288" y="196" width="150" height="124" rx="14" fill="#FFFFFF" stroke="#10B981" stroke-width="2" filter="url(#sh)"/>
+  <text x="363" y="228" text-anchor="middle" font-size="18" font-weight="700" font-family="Consolas, monospace" fill="#1E293B">web</text>
+  <text x="363" y="252" text-anchor="middle" font-size="13.5" fill="#475569">nginx, port 8080</text>
+  <text x="363" y="274" text-anchor="middle" font-size="13" fill="#047857">non-root</text>
+  <text x="363" y="296" text-anchor="middle" font-size="13" fill="#475569">your own image</text>
+
+  <!-- API -->
+  <rect x="502" y="196" width="130" height="124" rx="14" fill="#FFFFFF" stroke="#10B981" stroke-width="2" filter="url(#sh)"/>
+  <text x="567" y="228" text-anchor="middle" font-size="18" font-weight="700" font-family="Consolas, monospace" fill="#1E293B">api</text>
+  <text x="567" y="252" text-anchor="middle" font-size="13.5" fill="#475569">Flask, port 5000</text>
+  <text x="567" y="274" text-anchor="middle" font-size="13" fill="#047857">non-root</text>
+  <text x="567" y="296" text-anchor="middle" font-size="13" fill="#475569">your own image</text>
+
+  <!-- DB -->
+  <rect x="716" y="196" width="146" height="124" rx="14" fill="#FFFFFF" stroke="#8B5CF6" stroke-width="2" filter="url(#sh)"/>
+  <text x="789" y="228" text-anchor="middle" font-size="18" font-weight="700" font-family="Consolas, monospace" fill="#1E293B">db</text>
+  <text x="789" y="252" text-anchor="middle" font-size="13.5" fill="#475569">Postgres, port 5432</text>
+  <text x="789" y="274" text-anchor="middle" font-size="13" font-weight="700" fill="#B91C1C">no door on laptop</text>
+  <text x="789" y="296" text-anchor="middle" font-size="13" fill="#475569">password from .env</text>
+
+  <!-- Volume -->
+  <rect x="702" y="396" width="160" height="50" rx="10" fill="#FFFFFF" stroke="#8B5CF6"/>
+  <text x="782" y="418" text-anchor="middle" font-size="13.5" font-weight="700" fill="#1E293B">💾 volume</text>
+  <text x="782" y="436" text-anchor="middle" font-size="12" font-family="Consolas, monospace" fill="#475569">taskboard-db-data</text>
+  <line x1="782" y1="322" x2="782" y2="394" stroke="#8B5CF6" stroke-width="2.5"/>
+
+  <!-- Arrows -->
+  <line x1="176" y1="238" x2="286" y2="238" stroke="#10B981" stroke-width="3" marker-end="url(#arrG)"/>
+  <text x="220" y="226" text-anchor="middle" font-size="11.5" font-weight="700" font-family="Consolas, monospace" fill="#047857">127.0.0.1:8080</text>
+  <path d="M99 292 L99 356 L567 356 L567 322" fill="none" stroke="#10B981" stroke-width="3" marker-end="url(#arrG)"/>
+  <text x="330" y="348" text-anchor="middle" font-size="12.5" font-weight="700" font-family="Consolas, monospace" fill="#047857">127.0.0.1:5000</text>
+  <line x1="440" y1="258" x2="500" y2="258" stroke="#10B981" stroke-width="3" marker-end="url(#arrG)"/>
+  <line x1="634" y1="258" x2="714" y2="258" stroke="#10B981" stroke-width="3" marker-end="url(#arrG)"/>
+
+  <!-- Blocked web to db -->
+  <path d="M363 194 L363 100 L789 100 L789 194" fill="none" stroke="#EF4444" stroke-width="2.5" stroke-dasharray="7 5"/>
+  <circle cx="576" cy="100" r="15" fill="#FFFFFF" stroke="#EF4444" stroke-width="2.5"/>
+  <text x="576" y="105" text-anchor="middle" font-size="15" font-weight="700" fill="#EF4444">✕</text>
+  <text x="682" y="92" text-anchor="middle" font-size="13.5" font-weight="700" fill="#B91C1C">web can't even find db</text>
+
+  <text x="450" y="500" text-anchor="middle" font-size="14" fill="#64748B">Only api sits on both networks, so if web is hacked, the database is still out of reach.</text>
+</svg>
