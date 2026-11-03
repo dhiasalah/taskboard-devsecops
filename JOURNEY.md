@@ -64,3 +64,9 @@
 - Fixed: found the Python error with `kubectl logs`. The database comes to Kubernetes in a later lesson.
 - Security note: with no rules, a Pod runs as whatever user its image says, can reach every other Pod, and gets a ServiceAccount token.
 - Project: the API runs on Kubernetes from my own manifest, `k8s/api-pod.yaml`.
+## Lesson 12 — Manifests, namespaces, labels & selectors (2026-11-03)
+- Learned: every manifest has `apiVersion`, `kind`, `metadata` and `spec`, and the cluster writes `status`. Namespaces are rooms, and labels are stickers that selectors pick.
+- Broke: in the exercise, I wasn't sure which Pods a label change and a delete by label would leave.
+- Fixed: a label is just a sticker on a running Pod. Change it, and the selector sees the new value at once.
+- Security note: a namespace is not a wall. A Pod in another namespace still reached my API. But it's the scope where rights, quotas and network rules attach later, and deleting one deletes everything inside it.
+- Project: TaskBoard has its own `taskboard` namespace, and the API wears the standard `app.kubernetes.io/` labels.
