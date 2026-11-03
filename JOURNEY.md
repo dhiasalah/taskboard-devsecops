@@ -70,3 +70,10 @@
 - Fixed: a label is just a sticker on a running Pod. Change it, and the selector sees the new value at once.
 - Security note: a namespace is not a wall. A Pod in another namespace still reached my API. But it's the scope where rights, quotas and network rules attach later, and deleting one deletes everything inside it.
 - Project: TaskBoard has its own `taskboard` namespace, and the API wears the standard `app.kubernetes.io/` labels.
+## Lesson 13 — ReplicaSets & Deployments (2026-11-03)
+- Learned: a Deployment makes a ReplicaSet, and the ReplicaSet keeps the right number of Pods, counting them by label. The file's `replicas` wins over `kubectl scale`.
+- Broke: the web Pods crash with `host not found in upstream "api"`. nginx looks for `api`, a Compose name that doesn't exist in Kubernetes yet.
+- Fixed: found it with one `kubectl logs deployment/taskboard-web`. The fix (a Service called `api`) comes in lesson 15.
+- Surprise: I stopped a node. It said `NotReady`, but its Pod still said `Running`. The status was old news: the dead node couldn't report anymore.
+- Security note: every tag can move, so both images are now pinned by digest. A tag hijack can't change what my cluster runs.
+- Project: the API runs as 3 replicas and the web page as 2, as Deployments. The lone `api-pod.yaml` is gone.
