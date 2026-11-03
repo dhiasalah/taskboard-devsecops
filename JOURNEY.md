@@ -57,3 +57,10 @@
 - Fixed: I didn't know what kind can't do. All 3 nodes live on one laptop, so one failure stops them all.
 - Security note: `kubeconfig` is a password, so it stays out of Git. If it leaks, revoke the key first.
 - Project: the cluster is now a file, `k8s/kind-config.yaml`, so one command rebuilds it. ADR-002 says why I chose kind.
+
+## Lesson 11 — Pods (2026-11-03)
+- Learned: a Pod is the smallest thing Kubernetes runs, the kubelet starts it, and a deleted Pod stays gone.
+- Broke: `/tasks` failed inside the cluster with `KeyError: 'DB_HOST'`. The Pod has no database settings yet.
+- Fixed: found the Python error with `kubectl logs`. The database comes to Kubernetes in a later lesson.
+- Security note: with no rules, a Pod runs as whatever user its image says, can reach every other Pod, and gets a ServiceAccount token.
+- Project: the API runs on Kubernetes from my own manifest, `k8s/api-pod.yaml`.
