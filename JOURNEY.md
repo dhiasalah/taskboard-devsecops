@@ -84,3 +84,9 @@
 - Fixed: read the error with my mentor and fixed the slash. Lesson 15 starts by spotting the drift and applying the file.
 - Security note: in an incident, contain first (`rollout undo`, seconds), then investigate, then fix the file. A broken image gets stuck instead of taking the app down.
 - Project: shipped API v0.2 (`/health` shows the version) with zero downtime, scanned before the push, pinned by digest, with a readable `CHANGE-CAUSE` history.
+## Lesson 15 — Services & cluster DNS (2026-11-04)
+- Learned: Pod IPs change, so a Service gives a group of Pods one stable name and IP, found by labels. CoreDNS turns `api` into that IP (`api.taskboard` from another namespace).
+- Broke: the cluster still ran v0.1 from lesson 14's rollback, while my file said v0.2. Drift, again.
+- Fixed: spotted it by comparing the file's image with the cluster's, then `kubectl apply` made the file win. Then the `api` Service fixed nginx's `host not found in upstream "api"`.
+- Security note: NodePort opens the same port on every node, so I keep everything ClusterIP and use `port-forward`. A Service trusts labels, not people: an impostor Pod with the right label got real traffic.
+- Project: TaskBoard has `api` and `web` Services. The web Pods run, the page opens in my browser, and `/api/health` goes laptop → web → api. `/api/tasks` still needs the database (lesson 16).
