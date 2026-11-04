@@ -77,3 +77,10 @@
 - Surprise: I stopped a node. It said `NotReady`, but its Pod still said `Running`. The status was old news: the dead node couldn't report anymore.
 - Security note: every tag can move, so both images are now pinned by digest. A tag hijack can't change what my cluster runs.
 - Project: the API runs as 3 replicas and the web page as 2, as Deployments. The lone `api-pod.yaml` is gone.
+## Lesson 14 — Rolling updates & rollbacks (2026-11-04)
+- Learned: a rolling update makes a new ReplicaSet for the new version, grows it and shrinks the old one, a few Pods at a time. `maxSurge: 1` + `maxUnavailable: 0` means never fewer than 3 ready API Pods.
+- Broke: `InvalidImageName`, because I typed the image as `dhiasalah\taskboard-api` with a Windows backslash. Image names always use `/`.
+- Broke too: after `rollout undo --to-revision=3` I forgot to apply my file again, so the cluster ran v0.1 while the file said v0.2. That's drift.
+- Fixed: read the error with my mentor and fixed the slash. Lesson 15 starts by spotting the drift and applying the file.
+- Security note: in an incident, contain first (`rollout undo`, seconds), then investigate, then fix the file. A broken image gets stuck instead of taking the app down.
+- Project: shipped API v0.2 (`/health` shows the version) with zero downtime, scanned before the push, pinned by digest, with a readable `CHANGE-CAUSE` history.

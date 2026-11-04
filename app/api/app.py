@@ -4,6 +4,7 @@ import psycopg
 from flask import Flask, jsonify, request
 
 app = Flask(__name__)
+VERSION = "0.2"
 
 
 def connect():
@@ -19,7 +20,8 @@ def connect():
 
 @app.get("/health")
 def health():
-    return jsonify(status="ok")
+    return jsonify(status="ok", version=VERSION)
+
 
 
 @app.get("/tasks")
