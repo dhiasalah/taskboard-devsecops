@@ -89,4 +89,10 @@
 - Broke: the cluster still ran v0.1 from lesson 14's rollback, while my file said v0.2. Drift, again.
 - Fixed: spotted it by comparing the file's image with the cluster's, then `kubectl apply` made the file win. Then the `api` Service fixed nginx's `host not found in upstream "api"`.
 - Security note: NodePort opens the same port on every node, so I keep everything ClusterIP and use `port-forward`. A Service trusts labels, not people: an impostor Pod with the right label got real traffic.
-- Project: TaskBoard has `api` and `web` Services. The web Pods run, the page opens in my browser, and `/api/health` goes laptop → web → api. `/api/tasks` still needs the database (lesson 16).
+- Project: TaskBoard has `api` and `web` Services. The web Pods run, the page opens in my browser, and `/api/health` goes laptop → web → api. `/api/tasks` still needs the database (lesson 16).## Lesson 16 — ConfigMaps & Secrets (2026-11-07)
+- Learned: settings live outside the image. A ConfigMap is for settings anyone may read, and a Secret is for private ones. `envFrom` turns every key into an env var, and env vars are only read when the container starts.
+- Broke: on purpose, I set `DB_HOST: database`. Nothing broke until `rollout restart`, and then `/api/tasks` failed: no Service is called `database`.
+- Fixed: put `db` back, applied, and restarted again. The ConfigMap value must match the Service name.
+- Surprise: I deleted the Postgres Pod and my tasks were gone. There's no disk yet (lesson 21).
+- Security note: a Secret is only base64, not encryption. Anyone who can `get secrets`, `exec` into a Pod, copy etcd or see the YAML can read it. So the password is random, lives in a Git-ignored `secrets/` folder, and never goes through `--from-literal`.
+- Project: TaskBoard runs fully on Kubernetes: web → api → db, with a `db-config` ConfigMap, a `db-secret` Secret and a `db` Service.

@@ -1,0 +1,17 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: db
+  namespace: taskboard
+  labels:
+    app.kubernetes.io/name: taskboard-db
+    app.kubernetes.io/component: database
+    app.kubernetes.io/part-of: taskboard
+spec:
+  type: ClusterIP
+  selector:
+    app.kubernetes.io/name: taskboard-db
+  ports:
+    - name: postgres
+      port: 5432
+      targetPort: 5432
