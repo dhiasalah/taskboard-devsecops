@@ -8,7 +8,7 @@ metadata:
     app.kubernetes.io/component: api
     app.kubernetes.io/part-of: taskboard
   annotations:
-    kubernetes.io/change-cause: "v0.2: database settings from ConfigMap + Secret"
+    kubernetes.io/change-cause: "v0.2: readiness + liveness probes on /health"
 
 spec:
   replicas: 3
@@ -37,3 +37,15 @@ spec:
                 name: db-config
             - secretRef:
                 name: db-secret
+          readinessProbe:
+            httpGet:
+              path: /health
+              port: 5000
+            periodSeconds: 5
+          livenessProbe:
+            httpGet:
+              path: /health
+              port: 5000
+            periodSeconds: 10
+            timeoutSeconds: 2
+            failureThreshold: 3

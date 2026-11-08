@@ -29,3 +29,17 @@ spec:
                 name: db-config
             - secretRef:
                 name: db-secret
+          startupProbe:
+            exec:
+              command: ["pg_isready", "-h", "127.0.0.1"]
+            periodSeconds: 2
+            failureThreshold: 30
+          readinessProbe:
+            exec:
+              command: ["pg_isready", "-h", "127.0.0.1"]
+            periodSeconds: 5
+          livenessProbe:
+            tcpSocket:
+              port: 5432
+            periodSeconds: 10
+            failureThreshold: 3
