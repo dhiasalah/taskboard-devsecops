@@ -102,3 +102,8 @@
 - Mixed up: I thought `pg_isready` fits a `tcpSocket` probe. It's a command run inside the container, so it's an `exec` probe (exit code 0 = OK). A TCP probe only checks that the port opens.
 - Security note: availability is security. A frozen app is healed by its liveness probe. But a liveness probe must never check the database, or a DB outage restarts every API Pod at once.
 - Project: all 3 TaskBoard parts have probes: the API and web page on HTTP, Postgres with `pg_isready` (startup + readiness) and a TCP check on 5432 (liveness). All 6 Pods are `1/1`.
+## Lesson 18 — Requests, limits & QoS (2026-11-09)
+- Learned: a request is what a container is promised, and a limit is the most it may use. Above the CPU limit it's slowed down (throttled). Above the memory limit it's killed (`OOMKilled`, exit code 137).
+- Mixed up: I thought the scheduler looks at limits. It only adds up **requests** to find a node with room.
+- Security note: limits keep a DoS (an attacker or a memory leak) inside one container, so the db next to it survives. The `taskboard-limits` LimitRange gives forgotten containers defaults and refuses huge ones.
+- Project: every TaskBoard container has requests and limits (api 50m/64Mi → 500m/256Mi, web 10m/16Mi → 200m/64Mi, db 100m/256Mi → 1/512Mi). All 6 Pods are Burstable.

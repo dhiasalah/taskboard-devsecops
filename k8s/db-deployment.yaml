@@ -24,6 +24,13 @@ spec:
           image: postgres@sha256:123b17998ccaf47e53b502e8c6a1e79afd8f579c6f3eec83c563da026f957395
           ports:
             - containerPort: 5432
+          resources:
+            requests:
+              cpu: "100m"
+              memory: "256Mi"
+            limits:
+              cpu: "1"
+              memory: "512Mi"
           envFrom:
             - configMapRef:
                 name: db-config

@@ -24,6 +24,13 @@ spec:
           image: dhiasalah/taskboard-web@sha256:24e9ec713c222786c2ec4c34efb25affb475d8f4b21be2c61fb5a9d026f923f3
           ports:
             - containerPort: 8080
+          resources:
+            requests:
+              cpu: "10m"
+              memory: "16Mi"
+            limits:
+              cpu: "200m"
+              memory: "64Mi"
           readinessProbe:
             httpGet:
               path: /

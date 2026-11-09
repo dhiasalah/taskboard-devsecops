@@ -8,7 +8,7 @@ metadata:
     app.kubernetes.io/component: api
     app.kubernetes.io/part-of: taskboard
   annotations:
-    kubernetes.io/change-cause: "v0.2: readiness + liveness probes on /health"
+    kubernetes.io/change-cause: "v0.2: requests + limits"
 
 spec:
   replicas: 3
@@ -32,6 +32,13 @@ spec:
           image: dhiasalah/taskboard-api@sha256:1a380e0da84deb41dd3faa3d5ca9e29b03b61c100a277e79d708ad345b9e1643
           ports:
             - containerPort: 5000
+          resources:
+            requests:
+              cpu: "50m"
+              memory: "64Mi"
+            limits:
+              cpu: "500m"
+              memory: "256Mi"
           envFrom:
             - configMapRef:
                 name: db-config
