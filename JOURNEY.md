@@ -113,3 +113,9 @@
 - Mixed up again: the scheduler only adds up **requests** to pick a node. A 2 CPU limit doesn't stop a Pod that asks for 500m from fitting in 1 CPU of room.
 - Security note: a small audit found 8 open doors (any Pod reaches the db, root in the db, a ServiceAccount token in every Pod, privileged Pods allowed, the password in env vars, I am cluster-admin, no HTTPS, unsigned images). Small gaps chain into a break-in, so I wrote them down with the lesson that fixes each one: `docs/security-gaps.md`.
 - Project: README "Run on Kubernetes", and `kind-config.yaml` moved to `cluster/` so `k8s/` only holds Kubernetes objects.
+## Lesson 20 — Checkpoint + v0.2 (2026-11-11)
+- Learned: I finally saw it live. A Pod with a 20-CPU **limit** ran on an 8-CPU node, and a Pod **requesting** 20 CPU stayed `Pending`. The scheduler only counts requests.
+- Learned: the CKA exam is 2 hours in a real terminal. The speed tricks are making YAML with `--dry-run=client -o yaml`, `kubectl explain`, and switching to the right context for every task.
+- Fix-it drill: 3 bugs in a broken app (a tag typo → `ImagePullBackOff`; a Service selector that matched no Pod → empty EndpointSlice; a wrong `targetPort`). Bugs 2 and 3 gave the same `Connection refused`, and only the EndpointSlice told them apart.
+- Security note: an image inventory lists every image running in the cluster. My 3 images are pinned by digest, and the 8 system images use tags. When a CVE comes out, the inventory answers "are we hit?" in a minute.
+- Project: 🏷️ **v0.2 — Runs on Kubernetes** released, with the image digests in the release notes.
