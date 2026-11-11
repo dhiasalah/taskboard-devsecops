@@ -1,4 +1,4 @@
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 900 520" width="900" height="520" font-family="Segoe UI, Arial, sans-serif">
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 900 620" width="900" height="620" font-family="Segoe UI, Arial, sans-serif">
   <defs>
     <filter id="sh" x="-30%" y="-30%" width="160%" height="160%">
       <feDropShadow dx="0" dy="3" stdDeviation="4" flood-color="#0F172A" flood-opacity="0.18"/>
@@ -6,64 +6,121 @@
     <marker id="arrG" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse">
       <path d="M0 0 L10 5 L0 10 Z" fill="#10B981"/>
     </marker>
+    <marker id="arrP" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse">
+      <path d="M0 0 L10 5 L0 10 Z" fill="#8B5CF6"/>
+    </marker>
+    <marker id="arrO" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse">
+      <path d="M0 0 L10 5 L0 10 Z" fill="#F59E0B"/>
+    </marker>
   </defs>
 
-  <rect width="900" height="520" rx="20" fill="#F8FAFC"/>
-  <text x="450" y="42" text-anchor="middle" font-size="28" font-weight="700" fill="#1E293B">TaskBoard v0.1 architecture</text>
-  <text x="450" y="68" text-anchor="middle" font-size="15" fill="#475569">Three containers, two private networks, and only two doors on your laptop.</text>
+  <rect width="900" height="620" rx="20" fill="#F8FAFC"/>
+  <text x="450" y="42" text-anchor="middle" font-size="28" font-weight="700" fill="#1E293B">TaskBoard v0.2 architecture</text>
+  <text x="450" y="68" text-anchor="middle" font-size="15" fill="#475569">Runs on Kubernetes: a 3-node kind cluster on one laptop, rebuilt from zero with one script.</text>
 
-  <!-- Browser -->
-  <rect x="24" y="186" width="150" height="104" rx="14" fill="#FEF3C7" stroke="#F59E0B" stroke-width="2" filter="url(#sh)"/>
-  <text x="99" y="224" text-anchor="middle" font-size="26">🌐</text>
-  <text x="99" y="254" text-anchor="middle" font-size="16" font-weight="700" fill="#1E293B">Your browser</text>
-  <text x="99" y="274" text-anchor="middle" font-size="13" fill="#475569">on your laptop</text>
+  <!-- Laptop column -->
+  <rect x="20" y="96" width="170" height="420" rx="16" fill="#FEF3C7" fill-opacity="0.55" stroke="#F59E0B" stroke-width="2" stroke-dasharray="7 5"/>
+  <text x="105" y="122" text-anchor="middle" font-size="15" font-weight="700" fill="#92400E">💻 Your laptop</text>
 
-  <!-- Networks -->
-  <rect x="268" y="122" width="376" height="266" rx="16" fill="#DBEAFE" fill-opacity="0.6" stroke="#326CE5" stroke-width="2" stroke-dasharray="7 5"/>
-  <text x="284" y="378" font-size="15" font-weight="700" font-family="Consolas, monospace" fill="#1D4ED8">front network</text>
-  <rect x="486" y="164" width="392" height="308" rx="16" fill="#EDE9FE" fill-opacity="0.6" stroke="#8B5CF6" stroke-width="2" stroke-dasharray="7 5"/>
-  <text x="504" y="458" font-size="15" font-weight="700" font-family="Consolas, monospace" fill="#6D28D9">back network</text>
+  <rect x="36" y="140" width="138" height="78" rx="12" fill="#FFFFFF" stroke="#F59E0B" stroke-width="2" filter="url(#sh)"/>
+  <text x="105" y="170" text-anchor="middle" font-size="22">🌐</text>
+  <text x="105" y="194" text-anchor="middle" font-size="14" font-weight="700" fill="#1E293B">Browser</text>
+  <text x="105" y="210" text-anchor="middle" font-size="12" fill="#475569">localhost:8080</text>
 
-  <!-- Web -->
-  <rect x="288" y="196" width="150" height="124" rx="14" fill="#FFFFFF" stroke="#10B981" stroke-width="2" filter="url(#sh)"/>
-  <text x="363" y="228" text-anchor="middle" font-size="18" font-weight="700" font-family="Consolas, monospace" fill="#1E293B">web</text>
-  <text x="363" y="252" text-anchor="middle" font-size="13.5" fill="#475569">nginx, port 8080</text>
-  <text x="363" y="274" text-anchor="middle" font-size="13" fill="#047857">non-root</text>
-  <text x="363" y="296" text-anchor="middle" font-size="13" fill="#475569">your own image</text>
+  <rect x="36" y="246" width="138" height="74" rx="12" fill="#FFFFFF" stroke="#F59E0B" stroke-width="2" filter="url(#sh)"/>
+  <text x="105" y="272" text-anchor="middle" font-size="14" font-weight="700" fill="#1E293B">scripts\up.ps1</text>
+  <text x="105" y="290" text-anchor="middle" font-size="12" fill="#475569">cluster + namespace</text>
+  <text x="105" y="306" text-anchor="middle" font-size="12" fill="#475569">+ Secret + k8s\</text>
 
-  <!-- API -->
-  <rect x="502" y="196" width="130" height="124" rx="14" fill="#FFFFFF" stroke="#10B981" stroke-width="2" filter="url(#sh)"/>
-  <text x="567" y="228" text-anchor="middle" font-size="18" font-weight="700" font-family="Consolas, monospace" fill="#1E293B">api</text>
-  <text x="567" y="252" text-anchor="middle" font-size="13.5" fill="#475569">Flask, port 5000</text>
-  <text x="567" y="274" text-anchor="middle" font-size="13" fill="#047857">non-root</text>
-  <text x="567" y="296" text-anchor="middle" font-size="13" fill="#475569">your own image</text>
+  <rect x="36" y="348" width="138" height="66" rx="12" fill="#FFFFFF" stroke="#EF4444" stroke-width="2" filter="url(#sh)"/>
+  <text x="105" y="374" text-anchor="middle" font-size="14" font-weight="700" fill="#1E293B">🔒 secrets\db.env</text>
+  <text x="105" y="394" text-anchor="middle" font-size="12" fill="#475569">Git-ignored,</text>
+  <text x="105" y="408" text-anchor="middle" font-size="12" fill="#475569">never pushed</text>
 
-  <!-- DB -->
-  <rect x="716" y="196" width="146" height="124" rx="14" fill="#FFFFFF" stroke="#8B5CF6" stroke-width="2" filter="url(#sh)"/>
-  <text x="789" y="228" text-anchor="middle" font-size="18" font-weight="700" font-family="Consolas, monospace" fill="#1E293B">db</text>
-  <text x="789" y="252" text-anchor="middle" font-size="13.5" fill="#475569">Postgres, port 5432</text>
-  <text x="789" y="274" text-anchor="middle" font-size="13" font-weight="700" fill="#B91C1C">no door on laptop</text>
-  <text x="789" y="296" text-anchor="middle" font-size="13" fill="#475569">password from .env</text>
+  <rect x="36" y="436" width="138" height="66" rx="12" fill="#FFFFFF" stroke="#8B5CF6" stroke-width="2" filter="url(#sh)"/>
+  <text x="105" y="462" text-anchor="middle" font-size="14" font-weight="700" fill="#1E293B">🐳 Docker Hub</text>
+  <text x="105" y="482" text-anchor="middle" font-size="12" fill="#475569">images, pinned</text>
+  <text x="105" y="496" text-anchor="middle" font-size="12" fill="#475569">by @sha256 digest</text>
 
-  <!-- Volume -->
-  <rect x="702" y="396" width="160" height="50" rx="10" fill="#FFFFFF" stroke="#8B5CF6"/>
-  <text x="782" y="418" text-anchor="middle" font-size="13.5" font-weight="700" fill="#1E293B">💾 volume</text>
-  <text x="782" y="436" text-anchor="middle" font-size="12" font-family="Consolas, monospace" fill="#475569">taskboard-db-data</text>
-  <line x1="782" y1="322" x2="782" y2="394" stroke="#8B5CF6" stroke-width="2.5"/>
+  <!-- Cluster -->
+  <rect x="220" y="96" width="660" height="420" rx="16" fill="#FFFFFF" stroke="#326CE5" stroke-width="2.5" filter="url(#sh)"/>
+  <text x="240" y="122" font-size="16" font-weight="700" fill="#326CE5">☸ kind cluster "taskboard" (Kubernetes v1.37)</text>
+  <text x="240" y="142" font-size="13" fill="#475569">3 nodes = 3 Docker containers: control-plane (API server, etcd, scheduler), worker, worker2</text>
 
-  <!-- Arrows -->
-  <line x1="176" y1="238" x2="286" y2="238" stroke="#10B981" stroke-width="3" marker-end="url(#arrG)"/>
-  <text x="220" y="226" text-anchor="middle" font-size="11.5" font-weight="700" font-family="Consolas, monospace" fill="#047857">127.0.0.1:8080</text>
-  <path d="M99 292 L99 356 L567 356 L567 322" fill="none" stroke="#10B981" stroke-width="3" marker-end="url(#arrG)"/>
-  <text x="330" y="348" text-anchor="middle" font-size="12.5" font-weight="700" font-family="Consolas, monospace" fill="#047857">127.0.0.1:5000</text>
-  <line x1="440" y1="258" x2="500" y2="258" stroke="#10B981" stroke-width="3" marker-end="url(#arrG)"/>
-  <line x1="634" y1="258" x2="714" y2="258" stroke="#10B981" stroke-width="3" marker-end="url(#arrG)"/>
+  <!-- Namespace -->
+  <rect x="240" y="158" width="620" height="342" rx="14" fill="#DBEAFE" fill-opacity="0.55" stroke="#326CE5" stroke-width="2" stroke-dasharray="7 5"/>
+  <text x="256" y="182" font-size="15" font-weight="700" fill="#1E3A8A">namespace: taskboard</text>
+  <text x="844" y="182" text-anchor="end" font-size="13" fill="#1E3A8A">LimitRange taskboard-limits</text>
 
-  <!-- Blocked web to db -->
-  <path d="M363 194 L363 100 L789 100 L789 194" fill="none" stroke="#EF4444" stroke-width="2.5" stroke-dasharray="7 5"/>
-  <circle cx="576" cy="100" r="15" fill="#FFFFFF" stroke="#EF4444" stroke-width="2.5"/>
-  <text x="576" y="105" text-anchor="middle" font-size="15" font-weight="700" fill="#EF4444">✕</text>
-  <text x="682" y="92" text-anchor="middle" font-size="13.5" font-weight="700" fill="#B91C1C">web can't even find db</text>
+  <!-- Services row -->
+  <g font-size="13" text-anchor="middle">
+    <rect x="262" y="200" width="160" height="56" rx="12" fill="#D1FAE5" stroke="#10B981" stroke-width="2"/>
+    <text x="342" y="224" font-weight="700" fill="#1E293B">Service web</text>
+    <text x="342" y="243" fill="#475569">ClusterIP :80</text>
 
-  <text x="450" y="500" text-anchor="middle" font-size="14" fill="#64748B">Only api sits on both networks, so if web is hacked, the database is still out of reach.</text>
+    <rect x="470" y="200" width="160" height="56" rx="12" fill="#D1FAE5" stroke="#10B981" stroke-width="2"/>
+    <text x="550" y="224" font-weight="700" fill="#1E293B">Service api</text>
+    <text x="550" y="243" fill="#475569">ClusterIP :5000</text>
+
+    <rect x="678" y="200" width="160" height="56" rx="12" fill="#D1FAE5" stroke="#10B981" stroke-width="2"/>
+    <text x="758" y="224" font-weight="700" fill="#1E293B">Service db</text>
+    <text x="758" y="243" fill="#475569">ClusterIP :5432</text>
+  </g>
+
+  <!-- Deployments row -->
+  <g font-size="13" text-anchor="middle">
+    <rect x="262" y="290" width="160" height="112" rx="12" fill="#FFFFFF" stroke="#326CE5" stroke-width="2"/>
+    <text x="342" y="312" font-weight="700" fill="#1E293B">taskboard-web</text>
+    <text x="342" y="330" fill="#475569">nginx · 2 Pods</text>
+    <text x="342" y="348" fill="#475569">non-root</text>
+    <text x="342" y="366" fill="#475569">probes on /</text>
+    <text x="342" y="384" fill="#475569">10m–200m · 16–64Mi</text>
+
+    <rect x="470" y="290" width="160" height="112" rx="12" fill="#FFFFFF" stroke="#326CE5" stroke-width="2"/>
+    <text x="550" y="312" font-weight="700" fill="#1E293B">taskboard-api</text>
+    <text x="550" y="330" fill="#475569">Flask v0.2 · 3 Pods</text>
+    <text x="550" y="348" fill="#475569">non-root (appuser)</text>
+    <text x="550" y="366" fill="#475569">probes on /health</text>
+    <text x="550" y="384" fill="#475569">rolling update, undo</text>
+
+    <rect x="678" y="290" width="160" height="112" rx="12" fill="#FFFFFF" stroke="#326CE5" stroke-width="2"/>
+    <text x="758" y="312" font-weight="700" fill="#1E293B">taskboard-db</text>
+    <text x="758" y="330" fill="#475569">Postgres 18 · 1 Pod</text>
+    <text x="758" y="348" fill="#B91C1C">runs as root (gap)</text>
+    <text x="758" y="366" fill="#475569">pg_isready probes</text>
+    <text x="758" y="384" fill="#B91C1C">no disk yet (v0.3)</text>
+  </g>
+
+  <!-- service -> deployment -->
+  <g stroke="#10B981" stroke-width="2.5" fill="none">
+    <path d="M 342 256 L 342 286" marker-end="url(#arrG)"/>
+    <path d="M 550 256 L 550 286" marker-end="url(#arrG)"/>
+    <path d="M 758 256 L 758 286" marker-end="url(#arrG)"/>
+    <!-- web pods -> api service, api pods -> db service -->
+    <path d="M 422 330 C 446 330 446 236 466 230" marker-end="url(#arrG)"/>
+    <path d="M 630 330 C 654 330 654 236 674 230" marker-end="url(#arrG)"/>
+  </g>
+
+  <!-- ConfigMap and Secret -->
+  <g font-size="13" text-anchor="middle">
+    <rect x="470" y="424" width="170" height="58" rx="12" fill="#EDE9FE" stroke="#8B5CF6" stroke-width="2"/>
+    <text x="555" y="448" font-weight="700" fill="#1E293B">ConfigMap db-config</text>
+    <text x="555" y="467" fill="#475569">DB_HOST, DB name, user</text>
+
+    <rect x="668" y="424" width="170" height="58" rx="12" fill="#FEE2E2" stroke="#EF4444" stroke-width="2"/>
+    <text x="753" y="448" font-weight="700" fill="#1E293B">Secret db-secret</text>
+    <text x="753" y="467" fill="#475569">only base64 (gap)</text>
+  </g>
+
+  <!-- laptop arrows -->
+  <path d="M 174 180 C 210 180 230 228 258 228" fill="none" stroke="#F59E0B" stroke-width="2.5" marker-end="url(#arrO)"/>
+  <text x="105" y="236" text-anchor="middle" font-size="12" font-weight="700" fill="#92400E">port-forward → web:80</text>
+  <path d="M 174 382 C 400 560 660 540 736 486" fill="none" stroke="#EF4444" stroke-width="2" stroke-dasharray="6 4" marker-end="url(#arrO)"/>
+  <path d="M 174 470 C 210 470 240 420 258 404" fill="none" stroke="#8B5CF6" stroke-width="2" stroke-dasharray="6 4" marker-end="url(#arrP)"/>
+  <text x="208" y="430" font-size="12" font-weight="700" fill="#6D28D9">pull</text>
+
+  <!-- caption -->
+  <text x="450" y="552" text-anchor="middle" font-size="14" fill="#1E293B">Green = traffic: browser → web → api → db, all inside the cluster, nothing open on the network.</text>
+  <text x="450" y="574" text-anchor="middle" font-size="14" fill="#1E293B">Red = still open (see docs/security-gaps.md): root db, base64 Secret, any Pod can reach db.</text>
+  <text x="450" y="598" text-anchor="middle" font-size="13" fill="#64748B">Next, v0.3: a disk for Postgres, StatefulSet, backups, and every Pod non-root.</text>
 </svg>

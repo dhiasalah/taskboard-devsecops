@@ -5,7 +5,7 @@ automated Kubernetes platform that I am building from zero.
 
 ## Status
 ✅ v0.1: the app runs in containers.
-🚧 v0.2: the app runs on Kubernetes (a local kind cluster). Known security gaps: [docs/security-gaps.md](docs/security-gaps.md).
+✅ v0.2: the app runs on Kubernetes (a local kind cluster). Known security gaps: [docs/security-gaps.md](docs/security-gaps.md).
 
 ![Architecture](docs/architecture.svg)
 
