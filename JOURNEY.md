@@ -107,3 +107,9 @@
 - Mixed up: I thought the scheduler looks at limits. It only adds up **requests** to find a node with room.
 - Security note: limits keep a DoS (an attacker or a memory leak) inside one container, so the db next to it survives. The `taskboard-limits` LimitRange gives forgotten containers defaults and refuses huge ones.
 - Project: every TaskBoard container has requests and limits (api 50m/64Mi → 500m/256Mi, web 10m/16Mi → 200m/64Mi, db 100m/256Mi → 1/512Mi). All 6 Pods are Burstable.
+## Lesson 19 — TaskBoard on Kubernetes (2026-11-11)
+- Learned: `kubectl apply` is idempotent (run it twice, nothing breaks), `kubectl create` is not (`AlreadyExists`). `create ... --dry-run=client -o yaml | kubectl apply -f -` makes the Secret safe to run twice.
+- Built: `scripts/up.ps1` builds TaskBoard from zero (cluster, namespace, Secret, app, then waits for the probes) and `scripts/down.ps1` removes it. I deleted my cluster and rebuilt it with one command: 6 Pods ready.
+- Mixed up again: the scheduler only adds up **requests** to pick a node. A 2 CPU limit doesn't stop a Pod that asks for 500m from fitting in 1 CPU of room.
+- Security note: a small audit found 8 open doors (any Pod reaches the db, root in the db, a ServiceAccount token in every Pod, privileged Pods allowed, the password in env vars, I am cluster-admin, no HTTPS, unsigned images). Small gaps chain into a break-in, so I wrote them down with the lesson that fixes each one: `docs/security-gaps.md`.
+- Project: README "Run on Kubernetes", and `kind-config.yaml` moved to `cluster/` so `k8s/` only holds Kubernetes objects.
