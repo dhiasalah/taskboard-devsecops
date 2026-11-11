@@ -119,3 +119,9 @@
 - Fix-it drill: 3 bugs in a broken app (a tag typo → `ImagePullBackOff`; a Service selector that matched no Pod → empty EndpointSlice; a wrong `targetPort`). Bugs 2 and 3 gave the same `Connection refused`, and only the EndpointSlice told them apart.
 - Security note: an image inventory lists every image running in the cluster. My 3 images are pinned by digest, and the 8 system images use tags. When a CVE comes out, the inventory answers "are we hit?" in a minute.
 - Project: 🏷️ **v0.2 — Runs on Kubernetes** released, with the image digests in the release notes.
+## 🎓 Phase 1 exams (2026-11-11)
+- QCM: 19/20 on the first try. The one I missed: without `secrets/db.env`, kind still builds the cluster fine. Only the Secret is missing, so the api and db Pods sit in `CreateContainerConfigError` until `kubectl wait` gives up.
+- Lab "Monday on call": I got stuck and stopped. I learned the method from the solution: symptom → the one command that shows the cause → fix → test again.
+- Lab retake "Tuesday on call": passed, all 6 checks. I found 4 planted faults: a wrong DB password in the Secret (fixed from my file, then `rollout restart`, because env vars are only read at start), a fake ReplicaSet `api-canary` stealing `/api/health` traffic with my api's label (deleting its Pod did nothing: I had to delete the ReplicaSet that owns it), a db memory limit above the LimitRange (the ReplicaSet said `forbidden`), and a `node-agent` Deployment in a `monitoring` namespace that mounted the whole node disk.
+- Broke: I re-made the Secret by hand with the wrong password. Fixed: let `up.ps1` build it from `secrets/db.env`, never type a secret by hand.
+- Security note: `kubectl apply` only adds and changes what is in my files. It never removes an intruder. Someone has to look for extra things: an image inventory over all namespaces, and the owner of every Pod.
