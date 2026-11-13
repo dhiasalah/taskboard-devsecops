@@ -125,3 +125,10 @@
 - Lab retake "Tuesday on call": passed, all 6 checks. I found 4 planted faults: a wrong DB password in the Secret (fixed from my file, then `rollout restart`, because env vars are only read at start), a fake ReplicaSet `api-canary` stealing `/api/health` traffic with my api's label (deleting its Pod did nothing: I had to delete the ReplicaSet that owns it), a db memory limit above the LimitRange (the ReplicaSet said `forbidden`), and a `node-agent` Deployment in a `monitoring` namespace that mounted the whole node disk.
 - Broke: I re-made the Secret by hand with the wrong password. Fixed: let `up.ps1` build it from `secrets/db.env`, never type a secret by hand.
 - Security note: `kubectl apply` only adds and changes what is in my files. It never removes an intruder. Someone has to look for extra things: an image inventory over all namespaces, and the owner of every Pod.
+## Lesson 21 — Storage: PV, PVC, StorageClass (2026-11-13)
+- Learned: a container's own files die with it. A PVC is my request for a disk, the StorageClass is the supplier, and the PV is the real disk, made automatically and Bound to my PVC. A Pod says which PVC with `volumes` and which folder with `volumeMounts`.
+- Saw it live: I deleted the db Pod and `/api/tasks` answered `[]`. After the PVC, the same test kept my task.
+- Learned: `ReadWriteOnce` means one **node**, not one Pod. So the database uses `strategy: Recreate`: never two Postgres servers on the same files.
+- Finally clear: a missing Secret doesn't stop the cluster. The Pod is accepted, then sits in `CreateContainerConfigError`.
+- Security note: a volume on kind is a plain folder on a node, mode `777`, not encrypted. With `docker exec` on the node I found my task title in Postgres's files. Anyone with node access or a `hostPath` Pod can do the same.
+- Project: `k8s/db-pvc.yaml` (1Gi) is mounted at `/var/lib/postgresql`. Tasks survive a Pod restart, but not a cluster delete: that needs backups.

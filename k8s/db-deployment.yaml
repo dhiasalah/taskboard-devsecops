@@ -9,6 +9,8 @@ metadata:
     app.kubernetes.io/part-of: taskboard
 spec:
   replicas: 1
+  strategy: # NEW (1)
+    type: Recreate # NEW (1)
   selector:
     matchLabels:
       app.kubernetes.io/name: taskboard-db
@@ -24,6 +26,9 @@ spec:
           image: postgres@sha256:123b17998ccaf47e53b502e8c6a1e79afd8f579c6f3eec83c563da026f957395
           ports:
             - containerPort: 5432
+          volumeMounts:
+            - name: data
+              mountPath: /var/lib/postgresql
           resources:
             requests:
               cpu: "100m"
@@ -50,3 +55,7 @@ spec:
               port: 5432
             periodSeconds: 10
             failureThreshold: 3
+      volumes:
+        - name: data
+          persistentVolumeClaim:
+            claimName: db-data

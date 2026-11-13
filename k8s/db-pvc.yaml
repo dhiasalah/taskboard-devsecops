@@ -1,0 +1,16 @@
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: db-data
+  namespace: taskboard
+  labels:
+    app.kubernetes.io/name: taskboard-db
+    app.kubernetes.io/component: database
+    app.kubernetes.io/part-of: taskboard
+spec:
+  storageClassName: standard
+  accessModes:
+    - ReadWriteOnce
+  resources:
+    requests:
+      storage: 1Gi
