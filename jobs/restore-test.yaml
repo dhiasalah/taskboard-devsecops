@@ -1,0 +1,46 @@
+apiVersion: batch/v1
+kind: Job
+metadata:
+  name: restore-test
+  namespace: taskboard
+  labels:
+    app.kubernetes.io/name: taskboard-db-restore-test
+    app.kubernetes.io/component: backup
+    app.kubernetes.io/part-of: taskboard
+spec:
+  backoffLimit: 0
+  ttlSecondsAfterFinished: 600
+  template:
+    spec:
+      restartPolicy: Never
+      containers:
+        - name: restore
+          image: postgres@sha256:123b17998ccaf47e53b502e8c6a1e79afd8f579c6f3eec83c563da026f957395
+          command:
+            - sh
+            - -c
+            - |
+              set -eo pipefail
+              latest=$(ls -t /backups/tasks-*.sql.gz | head -n 1)
+              echo "Testing: $latest"
+              createdb -h db -U $POSTGRES_USER restore_test
+              gunzip -c $latest | psql -q -h db -U $POSTGRES_USER -d restore_test
+              psql -h db -U $POSTGRES_USER -d restore_test -c 'SELECT count(*) AS tasks_in_backup FROM tasks'
+              dropdb -h db -U $POSTGRES_USER restore_test
+          envFrom:
+            - configMapRef:
+                name: db-config
+          env:
+            - name: PGPASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: db-secret
+                  key: POSTGRES_PASSWORD
+          volumeMounts:
+            - name: backups
+              mountPath: /backups
+              readOnly: true
+      volumes:
+        - name: backups
+          persistentVolumeClaim:
+            claimName: db-backups

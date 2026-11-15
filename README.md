@@ -21,6 +21,17 @@ Needs Docker Desktop, `kind` and `kubectl`.
 
 `up.ps1` is safe to run again: a second run only says `unchanged`.
 
+## Database backups
+A CronJob (`k8s/db-backup-cronjob.yaml`) dumps the database every night at 02:00 (Paris time) into its own
+volume, and keeps 7 days of backups.
+
+- Run a backup now: `kubectl create job --from=cronjob/db-backup backup-now -n taskboard`
+- Prove the newest backup can be restored (into a scratch database, the real data is not touched):
+  `kubectl apply -f jobs\restore-test.yaml`, then `kubectl logs job/restore-test -n taskboard`
+
+Known limits: the backups live on the same machine as the data and are not encrypted yet
+(see [docs/security-gaps.md](docs/security-gaps.md)).
+
 ## Run with Docker Compose
 1. Copy `.env.example` to `.env`, then change the password
 2. `docker compose up -d`
@@ -32,7 +43,8 @@ Images: [dhiasalah on Docker Hub](https://hub.docker.com/u/dhiasalah)
 - `app/api/`: the Python API
 - `app/frontend/`: the web page
 - `docs/`: diagrams and design decisions, starting with the [network plan](docs/network-plan.md)
-- `k8s/`: the Kubernetes manifests (Deployments for web and api, a StatefulSet with its own disk for Postgres, Services, ConfigMap, LimitRange)
+- `k8s/`: the Kubernetes manifests (Deployments for web and api, a StatefulSet with its own disk for Postgres, Services, ConfigMap, LimitRange, the nightly backup CronJob)
+- `jobs/`: Jobs I run by hand, like the backup restore test
 - `cluster/`: the kind cluster config (1 control plane + 2 workers)
 - `scripts/`: helper scripts, including `up.ps1` and `down.ps1`
 - `docker-compose.yml`: starts everything
