@@ -132,3 +132,9 @@
 - Finally clear: a missing Secret doesn't stop the cluster. The Pod is accepted, then sits in `CreateContainerConfigError`.
 - Security note: a volume on kind is a plain folder on a node, mode `777`, not encrypted. With `docker exec` on the node I found my task title in Postgres's files. Anyone with node access or a `hostPath` Pod can do the same.
 - Project: `k8s/db-pvc.yaml` (1Gi) is mounted at `/var/lib/postgresql`. Tasks survive a Pod restart, but not a cluster delete: that needs backups.
+## Lesson 22 — StatefulSets (2026-11-15)
+- Learned: web and api are stateless (any copy will do), a database is stateful. A StatefulSet gives each Pod a fixed name (`taskboard-db-0`), its own PVC made from `volumeClaimTemplates` (`data-taskboard-db-0`), and an order (start 0, 1, 2; stop 2, 1, 0).
+- Saw it live: I deleted `shop-1` and it came back with the same name and the same file, only a new IP. A headless Service (`clusterIP: None`) gives each Pod its own DNS name.
+- Asked myself: with 3 copies and 3 disks, can two tasks get the same id? Yes. Kubernetes never copies data between the disks, so `replicas: 3` gives 3 separate databases. Real setups use replication: one primary takes the writes, the replicas copy it and are read-only. The fixed names are what make that possible (everyone knows who `-0` is).
+- Security note: a database gets a ClusterIP or headless Service, never a NodePort or LoadBalancer. `port-forward` listens on `127.0.0.1` only; with `--address 0.0.0.0` it is offered to the whole Wi-Fi. PVCs stay behind when a StatefulSet is deleted: forgotten PVCs are forgotten data.
+- Project: Postgres moved from a Deployment to a StatefulSet with a dump (`pg_dump`) and a restore (`psql -f`). No task was lost, and the dump was deleted after. `up.ps1` now also waits for the StatefulSet.

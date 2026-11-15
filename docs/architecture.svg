@@ -67,7 +67,7 @@
     <text x="758" y="243" fill="#475569">ClusterIP :5432</text>
   </g>
 
-  <!-- Deployments row -->
+  <!-- Workloads row: 2 Deployments and the db StatefulSet -->
   <g font-size="13" text-anchor="middle">
     <rect x="262" y="290" width="160" height="112" rx="12" fill="#FFFFFF" stroke="#326CE5" stroke-width="2"/>
     <text x="342" y="312" font-weight="700" fill="#1E293B">taskboard-web</text>
@@ -88,7 +88,7 @@
     <text x="758" y="330" fill="#475569">Postgres 18 · 1 Pod</text>
     <text x="758" y="348" fill="#B91C1C">runs as root (gap)</text>
     <text x="758" y="366" fill="#475569">pg_isready probes</text>
-    <text x="758" y="384" fill="#B91C1C">no disk yet (v0.3)</text>
+    <text x="758" y="384" fill="#475569">StatefulSet + 1Gi PVC</text>
   </g>
 
   <!-- service -> deployment -->
@@ -122,5 +122,5 @@
   <!-- caption -->
   <text x="450" y="552" text-anchor="middle" font-size="14" fill="#1E293B">Green = traffic: browser → web → api → db, all inside the cluster, nothing open on the network.</text>
   <text x="450" y="574" text-anchor="middle" font-size="14" fill="#1E293B">Red = still open (see docs/security-gaps.md): root db, base64 Secret, any Pod can reach db.</text>
-  <text x="450" y="598" text-anchor="middle" font-size="13" fill="#64748B">Next, v0.3: a disk for Postgres, StatefulSet, backups, and every Pod non-root.</text>
+  <text x="450" y="598" text-anchor="middle" font-size="13" fill="#64748B">Next, v0.3: nightly backups, and every Pod non-root.</text>
 </svg>

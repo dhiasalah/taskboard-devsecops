@@ -32,7 +32,7 @@ Images: [dhiasalah on Docker Hub](https://hub.docker.com/u/dhiasalah)
 - `app/api/`: the Python API
 - `app/frontend/`: the web page
 - `docs/`: diagrams and design decisions, starting with the [network plan](docs/network-plan.md)
-- `k8s/`: the Kubernetes manifests (Deployments, Services, ConfigMap, LimitRange)
+- `k8s/`: the Kubernetes manifests (Deployments for web and api, a StatefulSet with its own disk for Postgres, Services, ConfigMap, LimitRange)
 - `cluster/`: the kind cluster config (1 control plane + 2 workers)
 - `scripts/`: helper scripts, including `up.ps1` and `down.ps1`
 - `docker-compose.yml`: starts everything

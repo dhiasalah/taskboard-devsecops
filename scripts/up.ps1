@@ -20,5 +20,9 @@ Write-Host "Waiting for TaskBoard to be ready..."
 kubectl wait deployment --all -n taskboard --for=condition=Available --timeout=180s
 if ($LASTEXITCODE -ne 0) { throw "TaskBoard is not ready. Try: kubectl get pods -n taskboard" }
 
+kubectl rollout status statefulset/taskboard-db -n taskboard --timeout=180s
+if ($LASTEXITCODE -ne 0) { throw "The database is not ready. Try: kubectl get pods -n taskboard" }
+
+
 kubectl get pods -n taskboard
 Write-Host "TaskBoard is up. Open it with: kubectl port-forward -n taskboard svc/web 8080:80"
