@@ -32,6 +32,10 @@ volume, and keeps 7 days of backups.
 Known limits: the backups live on the same machine as the data and are not encrypted yet
 (see [docs/security-gaps.md](docs/security-gaps.md)).
 
+## When something breaks
+Run `.\scripts\status.ps1` first. It only reads: nodes, Pods, restarts with the last exit code, the Pods
+behind each Service, and recent warnings. Then follow the [runbook](docs/runbook.md).
+
 ## Run with Docker Compose
 1. Copy `.env.example` to `.env`, then change the password
 2. `docker compose up -d`
@@ -42,11 +46,11 @@ Images: [dhiasalah on Docker Hub](https://hub.docker.com/u/dhiasalah)
 ## Project structure
 - `app/api/`: the Python API
 - `app/frontend/`: the web page
-- `docs/`: diagrams and design decisions, starting with the [network plan](docs/network-plan.md)
+- `docs/`: diagrams, design decisions, the [network plan](docs/network-plan.md) and the [runbook](docs/runbook.md)
 - `k8s/`: the Kubernetes manifests (Deployments for web and api, a StatefulSet with its own disk for Postgres, Services, ConfigMap, LimitRange, the nightly backup CronJob)
 - `jobs/`: Jobs I run by hand, like the backup restore test
 - `cluster/`: the kind cluster config (1 control plane + 2 workers)
-- `scripts/`: helper scripts, including `up.ps1` and `down.ps1`
+- `scripts/`: helper scripts: `up.ps1`, `down.ps1`, and `status.ps1` (read-only first look)
 - `docker-compose.yml`: starts everything
 - `CHANGELOG.md`: what changed in each version
 
