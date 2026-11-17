@@ -8,7 +8,9 @@ What to do when TaskBoard misbehaves. Read-only steps first; change nothing unti
 .\scripts\status.ps1
 ```
 
-It prints, read-only: nodes, Pods, restarts with the last exit code and reason, the Pods behind each Service (EndpointSlices), and the `Warning` events of the last hour.
+It prints, read-only: nodes, Pods, restarts with the last exit code and reason, the Pods behind each Service (EndpointSlices), the `Warning` events of the last hour, and **drift**: the lines where the cluster differs from `k8s\` (empty = good).
+
+Drift has 2 blind spots: objects that are not in `k8s\` (the Secret) and fields **added** by hand (`apply` and `diff` don't see them). For those, read `managedFields`: `kubectl get deploy <name> -n taskboard --show-managed-fields -o yaml`. A manager called `kubectl-set`, `kubectl-patch` or `kubectl-edit` means a hand change.
 
 ## 2. The debugging ladder
 
@@ -30,6 +32,11 @@ Never started → the cause is in the events. Started and died → the cause is 
 | Web Pods restart a few times after a cold start, previous logs say `host not found in upstream "api"` | nginx started before the cluster DNS answered | None. Kubernetes restarts it until DNS is ready |
 | Page loads, tasks fail with 502, all Pods `1/1` | The `api` Service selects no Pod (empty EndpointSlice) | Check the selector, re-apply `k8s\api-service.yaml` |
 | API "can't reach the database" | DNS, Service or network | In the API toolbox: `nc -zv db 5432`, `nslookup db.taskboard.svc.cluster.local` |
+| New API Pod `ImagePullBackOff`, events say `not found`, users see nothing | The image tag doesn't exist. `maxUnavailable: 0` keeps the old Pods serving | Check the tag on Docker Hub, then `.\scripts\up.ps1` (or `kubectl rollout undo`) |
+| API Pods `CreateContainerConfigError`, `secret "db-secret" not found`, page 502 | The Secret was deleted. It's not in `k8s\`, so drift shows nothing | `.\scripts\up.ps1` rebuilds it from `secrets\db.env` |
+| New Pod `Pending`, `FailedScheduling ... didn't match Pod's node affinity/selector`, `apply` says `unchanged` | A `nodeSelector` added by hand. `apply` can't remove a field it never set | `kubectl rollout undo deploy/<name> -n taskboard`, then find who added it (`managedFields`) |
+| `CrashLoopBackOff`, `LAST_EXIT 137`, `REASON OOMKilled` | The memory limit is too low | Compare the limit with `k8s\`, then `.\scripts\up.ps1` |
+| A backup Job hours late, first try `could not translate host name "db"`, second try OK | The laptop was off at 02:00, the CronJob ran at start-up before DNS was ready | None, if a full `.sql.gz` exists. A `.part` file = a failed try, never a backup |
 
 ## 4. Toolbox check of the API
 

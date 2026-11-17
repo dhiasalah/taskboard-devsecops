@@ -150,3 +150,9 @@
 - Asked myself: why `--copy-to` makes a twin instead of debugging the original Pod? A crashing container is dead most of the time, and a Pod's command can't be changed once it exists. The twin has the same image and files but runs `sh`, so it stays alive, and the original stays untouched as evidence.
 - Security note: one `exec` into the API can read the database password (I counted its 24 characters without printing it). `pods/exec` is a separate right from `pods/log`: I have it (cluster-admin), the Pods' ServiceAccount doesn't. A debug toolbox runs as root next to my non-root app.
 - Project: `scripts/status.ps1` (read-only first look) and `docs/runbook.md`.
+## Lesson 25 — k9s + classic failures (2026-11-17)
+- Learned: k9s is the debugging ladder on one screen (`d` describe, `l` logs, `p` previous logs, `:events`). I start it with `--readonly`, so a wrong key can't delete anything.
+- Broke and fixed TaskBoard 5 ways: a tag that doesn't exist (`ImagePullBackOff`, and users saw nothing thanks to `maxUnavailable: 0`), a deleted Secret (`CreateContainerConfigError`), a typo in a Service selector (every Pod `1/1`, no event, an empty EndpointSlice), a `nodeSelector` no node matches (`Pending`), and a 12Mi memory limit (exit 137, `OOMKilled`).
+- Fell into the `apply` trap: a field added by hand survives `apply` and `kubectl diff`. Only `rollout undo` (or removing the field) fixed it. `managedFields` told me which tool changed it, and when.
+- Security note: rebuilt a real timeline from my own cluster. The backup ran 8 hours late because the laptop was off at 02:00, the first try failed on DNS at start-up, and the `.part` name kept the broken file from looking like a good backup. Save the evidence before fixing: events only live about 1 hour, and no tool here says **who** did it (that's the audit log, later).
+- Project: `scripts/status.ps1` got a 6th check, drift (`kubectl diff` against `k8s\`), and the 5 cases went into `docs/runbook.md`.

@@ -16,3 +16,7 @@ kubectl get endpointslices -n $ns
 
 Write-Host "`n== 5. Warnings, newest last =="
 kubectl get events -n $ns --field-selector type=Warning --sort-by=.lastTimestamp
+
+Write-Host "`n== 6. Drift: lines that differ from the files (nothing = good) =="
+$env:PATH += ";C:\Program Files\Git\usr\bin"
+kubectl diff -f "$PSScriptRoot\..\k8s" | Select-String "^[-+] " | Select-String -NotMatch "generation:"
