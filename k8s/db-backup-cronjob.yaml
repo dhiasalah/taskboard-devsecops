@@ -24,9 +24,17 @@ spec:
             app.kubernetes.io/part-of: taskboard
         spec:
           restartPolicy: Never
+          securityContext:
+            runAsNonRoot: true
+            runAsUser: 70
+            runAsGroup: 70
           containers:
             - name: backup
               image: postgres@sha256:123b17998ccaf47e53b502e8c6a1e79afd8f579c6f3eec83c563da026f957395
+              securityContext:
+                allowPrivilegeEscalation: false
+                capabilities:
+                  drop: ["ALL"]
               command:
                 - sh
                 - -c

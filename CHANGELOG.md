@@ -1,5 +1,18 @@
 # Changelog
 
+## v0.3 — Persistent DB, backups, non-root
+
+- Postgres is a **StatefulSet** (`taskboard-db-0`) with its own 1Gi disk (PVC): tasks survive restarts
+- Headless Service `db-headless` next to the normal `db` Service; still no door to the outside
+- Nightly **backup CronJob** (02:00 Europe/Paris, `pg_dump | gzip`, 7 days kept, fails loudly) into its own volume
+- A **restore-test Job** proves the newest backup can be loaded, into a scratch database
+- **Every Pod non-root**: api UID 10001, web UID 101, db and backup jobs UID 70, all with
+  `allowPrivilegeEscalation: false` and every Linux capability dropped
+- web and api **spread over both workers** (`topologySpreadConstraints`): one node down no longer means TaskBoard down
+- `scripts/status.ps1`: a read-only first look (nodes, Pods, restarts, endpoints, warnings, drift, non-root check)
+- `docs/runbook.md`: how to read and fix the 5 classic failures
+- Security gaps 2 (root database) closed and 10 (root backup) half closed: see `docs/security-gaps.md`
+
 ## v0.2 — Runs on Kubernetes
 
 - Runs on a local 3-node kind cluster, in its own `taskboard` namespace

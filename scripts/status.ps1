@@ -20,3 +20,6 @@ kubectl get events -n $ns --field-selector type=Warning --sort-by=.lastTimestamp
 Write-Host "`n== 6. Drift: lines that differ from the files (nothing = good) =="
 $env:PATH += ";C:\Program Files\Git\usr\bin"
 kubectl diff -f "$PSScriptRoot\..\k8s" | Select-String "^[-+] " | Select-String -NotMatch "generation:"
+
+Write-Host "`n== 7. Non-root check (NON_ROOT should be true) =="
+kubectl get pods -n $ns -o custom-columns="POD:.metadata.name,NON_ROOT:.spec.securityContext.runAsNonRoot,USER:.spec.securityContext.runAsUser,NODE:.spec.nodeName"
