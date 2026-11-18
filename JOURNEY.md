@@ -162,3 +162,8 @@
 - Saw it live: `runAsNonRoot: true` alone isn't enough. busybox → `image will run as root`; my API image (`USER appuser`) → `non-numeric user`, so the badge needs a number (`runAsUser`). The rollout got stuck and `maxUnavailable: 0` kept the old Pods serving users.
 - Security note: same Pod, same `hostPath` to the node's `/etc`: as root it could count the node's password file and had 14 capabilities (`CapEff a80425fb`); as UID 1000 with `drop: ["ALL"]` → `Permission denied`, `CapEff 0`. UID 0 in a container is UID 0 for the node's kernel.
 - Project: every TaskBoard Pod is non-root with a fixed UID (api 10001, web 101, db + backup 70), `allowPrivilegeEscalation: false`, all capabilities dropped; web and api spread over both workers; `status.ps1` got a 7th check (non-root). Released **v0.3**.
+## 🎓 Phase 2 exams (2026-11-18)
+- QCM: 24/24 on the first try (storage, StatefulSets, Jobs and CronJobs, debugging, scheduling, securityContext, plus 4 questions from the lab).
+- Lab: a broken TaskBoard to fix alone (a tainted node, a suspended backup CronJob, a stranger DaemonSet, drift). Passed on the retake, 5 of 6 criteria.
+- Broke: twice I ran `kubectl delete -f k8s\` then `apply` to "reset" things. The folder holds the namespace and the PVCs, and kind's reclaim policy is `Delete`: the tasks and every old backup were gone. It looked fixed, but the original disk was lost.
+- Learned: fix the field that drifted (`kubectl edit`/`patch`, `rollout restart`), never delete the whole folder. Before deleting a namespace, look inside: `kubectl get pvc -n <ns>`. A CronJob holds no data, so delete + re-apply of that one file was fine.
