@@ -34,6 +34,18 @@ volume, and keeps 7 days of backups.
 Known limits: the backups live on the same machine as the data and are not encrypted yet
 (see [docs/security-gaps.md](docs/security-gaps.md)).
 
+## Install with Helm
+The same TaskBoard is also packaged as a Helm chart in `charts/taskboard/` (chart `0.1.0`, app `0.2`).
+It is secure by default: with no values at all, every Pod is non-root with all capabilities dropped,
+every Service is internal, and the backup disk survives `helm uninstall`.
+
+1. Make the namespace and the password Secret first (the chart never takes a password as a value):
+   `kubectl create namespace taskboard-helm`, then
+   `kubectl create secret generic db-secret -n taskboard-helm --from-env-file=secrets\db.env`
+2. Install: `helm install taskboard charts	askboard -n taskboard-helm`
+3. Check it before installing, without touching the cluster: `helm lint charts	askboard` and
+   `helm template taskboard charts	askboard -n taskboard-helm`
+
 ## When something breaks
 Run `.\scripts\status.ps1` first. It only reads: nodes, Pods, restarts with the last exit code, the Pods
 behind each Service, and recent warnings. Then follow the [runbook](docs/runbook.md).
@@ -50,6 +62,8 @@ Images: [dhiasalah on Docker Hub](https://hub.docker.com/u/dhiasalah)
 - `app/frontend/`: the web page
 - `docs/`: diagrams, design decisions, the [network plan](docs/network-plan.md) and the [runbook](docs/runbook.md)
 - `k8s/`: the Kubernetes manifests (Deployments for web and api, a StatefulSet with its own disk for Postgres, Services, ConfigMap, LimitRange, the nightly backup CronJob)
+- `charts/taskboard/`: the Helm chart (templates with holes + safe default values)
+- `helm-test/`: values for the podinfo test release (learning Helm)
 - `jobs/`: Jobs I run by hand, like the backup restore test
 - `cluster/`: the kind cluster config (1 control plane + 2 workers)
 - `scripts/`: helper scripts: `up.ps1`, `down.ps1`, and `status.ps1` (read-only first look)

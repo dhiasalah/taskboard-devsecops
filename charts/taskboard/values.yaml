@@ -1,0 +1,44 @@
+# TaskBoard chart - default values.
+# Secure by default: "helm install" with no values at all gives a safe TaskBoard.
+
+web:
+  replicas: 2
+  image: dhiasalah/taskboard-web@sha256:24e9ec713c222786c2ec4c34efb25affb475d8f4b21be2c61fb5a9d026f923f3
+  runAsUser: 101
+  resources:
+    requests:
+      cpu: 10m
+      memory: 16Mi
+    limits:
+      cpu: 200m
+      memory: 64Mi
+
+api:
+  replicas: 3
+  image: dhiasalah/taskboard-api@sha256:1a380e0da84deb41dd3faa3d5ca9e29b03b61c100a277e79d708ad345b9e1643
+  runAsUser: 10001
+  resources:
+    requests:
+      cpu: 50m
+      memory: 64Mi
+    limits:
+      cpu: 500m
+      memory: 256Mi
+
+db:
+  image: postgres@sha256:123b17998ccaf47e53b502e8c6a1e79afd8f579c6f3eec83c563da026f957395
+  runAsUser: 70
+  storage: 1Gi
+  existingSecret: db-secret
+  resources:
+    requests:
+      cpu: 100m
+      memory: 256Mi
+    limits:
+      cpu: "1"
+      memory: 512Mi
+
+backup:
+  schedule: "0 2 * * *"
+  timeZone: Europe/Paris
+  storage: 1Gi

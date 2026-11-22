@@ -1,0 +1,67 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: taskboard-api
+  namespace: {{ .Release.Namespace }}
+  labels:
+    app.kubernetes.io/name: taskboard-api
+    app.kubernetes.io/component: api
+    app.kubernetes.io/part-of: taskboard
+spec:
+  replicas: {{ .Values.api.replicas }} # <-- 2
+  strategy:
+    type: RollingUpdate
+    rollingUpdate:
+      maxSurge: 1
+      maxUnavailable: 0
+  selector:
+    matchLabels:
+      app.kubernetes.io/name: taskboard-api
+  template:
+    metadata:
+      labels:
+        app.kubernetes.io/name: taskboard-api
+        app.kubernetes.io/component: api
+        app.kubernetes.io/part-of: taskboard
+    spec:
+      securityContext:
+        runAsNonRoot: true
+        runAsUser: {{ .Values.api.runAsUser }} # <-- 3
+        runAsGroup: {{ .Values.api.runAsUser }} # <-- 3
+      topologySpreadConstraints:
+        - maxSkew: 1
+          topologyKey: kubernetes.io/hostname
+          whenUnsatisfiable: DoNotSchedule
+          nodeTaintsPolicy: Honor
+          matchLabelKeys:
+            - pod-template-hash
+          labelSelector:
+            matchLabels:
+              app.kubernetes.io/name: taskboard-api
+      containers:
+        - name: api
+          image: {{ .Values.api.image }} # <-- 4
+          securityContext:
+            allowPrivilegeEscalation: false
+            capabilities:
+              drop: ["ALL"]
+          ports:
+            - containerPort: 5000
+          resources: {{- toYaml .Values.api.resources | nindent 12 }} # <-- 5
+          envFrom:
+            - configMapRef:
+                name: db-config
+            - secretRef:
+                name: {{ .Values.db.existingSecret }} # <-- 6
+          readinessProbe:
+            httpGet:
+              path: /health
+              port: 5000
+            periodSeconds: 5
+          livenessProbe:
+            httpGet:
+              path: /health
+              port: 5000
+            periodSeconds: 10
+            timeoutSeconds: 2
+            failureThreshold: 3

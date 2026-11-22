@@ -1,0 +1,5 @@
+TaskBoard {{ .Chart.AppVersion }} is installed: release "{{ .Release.Name }}" in the namespace "{{ .Release.Namespace }}".
+
+Open it with:
+  kubectl port-forward -n {{ .Release.Namespace }} svc/web 8081:80
+then go to http://localhost:8081
