@@ -1,0 +1,36 @@
+# Values for the podinfo chart, version 6.17.0 (test release "demo" in namespace helm-test).
+# Install / upgrade with:
+#   helm upgrade --install demo podinfo/podinfo --version 6.17.0 -n helm-test --create-namespace -f helm-test\podinfo-values.yaml --wait
+replicaCount: 2
+
+ui:
+  message: "TaskBoard test shop"
+
+podSecurityContext:
+  runAsNonRoot: true
+  runAsUser: 100
+  runAsGroup: 101
+
+securityContext:
+  allowPrivilegeEscalation: false
+  capabilities:
+    drop: ["ALL"]
+
+resources:
+  requests:
+    cpu: 10m
+    memory: 32Mi
+  limits:
+    cpu: 100m
+    memory: 64Mi
+
+topologySpreadConstraints:
+  - maxSkew: 1
+    topologyKey: kubernetes.io/hostname
+    whenUnsatisfiable: DoNotSchedule
+    nodeTaintsPolicy: Honor
+    matchLabelKeys:
+      - pod-template-hash
+    labelSelector:
+      matchLabels:
+        app.kubernetes.io/name: demo-podinfo

@@ -167,3 +167,9 @@
 - Lab: a broken TaskBoard to fix alone (a tainted node, a suspended backup CronJob, a stranger DaemonSet, drift). Passed on the retake, 5 of 6 criteria.
 - Broke: twice I ran `kubectl delete -f k8s\` then `apply` to "reset" things. The folder holds the namespace and the PVCs, and kind's reclaim policy is `Delete`: the tasks and every old backup were gone. It looked fixed, but the original disk was lost.
 - Learned: fix the field that drifted (`kubectl edit`/`patch`, `rollout restart`), never delete the whole folder. Before deleting a namespace, look inside: `kubectl get pvc -n <ns>`. A CronJob holds no data, so delete + re-apply of that one file was fine.
+## Lesson 27 — Helm basics (2026-11-22)
+- Learned: Helm is the package manager of Kubernetes. A chart is a box of templates with holes plus default values; my values fill the holes; one installed copy is a release with numbered revisions.
+- Read before installing, without touching the cluster: `helm show chart`, `helm show values`, `helm template`. In podinfo I found no `privileged` or `hostPath`, but an empty `securityContext` and two risky test-hook images (one with no tag, one curl from 2020).
+- Fell into the trap on purpose: `helm upgrade` with only `--set replicaCount=1` dropped the message and the colour. Then fell into it for real: my values file had no `replicaCount`, so the release ran 1 Pod instead of 3. Fixed in the file, not with `--set`.
+- Security note: a chart runs with my rights, so I take the repo URL from the project's docs, pin `--version` on every command, and add my own rules (non-root 100/101, drop ALL, limits, spread). Every value lives in a release Secret for every revision: never a password in `--set`.
+- Project: podinfo 6.17.0 runs in `helm-test` from `helm-test/podinfo-values.yaml`, one Pod per worker, `CapEff 0`. ADR-003 "why Helm".
