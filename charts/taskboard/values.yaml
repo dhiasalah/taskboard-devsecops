@@ -39,6 +39,8 @@ db:
       memory: 512Mi
 
 backup:
+  enabled: true
   schedule: "0 2 * * *"
   timeZone: Europe/Paris
   storage: 1Gi
+  keepDays: 7

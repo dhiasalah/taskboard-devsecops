@@ -1,3 +1,4 @@
+{{- if .Values.backup.enabled }}
 apiVersion: v1
 kind: PersistentVolumeClaim
 metadata:
@@ -6,7 +7,7 @@ metadata:
   labels:
     app.kubernetes.io/name: taskboard-db-backup
     app.kubernetes.io/component: backup
-    app.kubernetes.io/part-of: taskboard
+    {{- include "taskboard.labels" . | nindent 4 }}
   annotations:
     helm.sh/resource-policy: keep
 spec:
@@ -16,3 +17,4 @@ spec:
   resources:
     requests:
       storage: {{ .Values.backup.storage }}
+{{- end }}

@@ -1,3 +1,4 @@
+{{- if .Values.backup.enabled }}
 apiVersion: batch/v1
 kind: CronJob
 metadata:
@@ -6,7 +7,7 @@ metadata:
   labels:
     app.kubernetes.io/name: taskboard-db-backup
     app.kubernetes.io/component: backup
-    app.kubernetes.io/part-of: taskboard
+    {{- include "taskboard.labels" . | nindent 4 }}
 spec:
   schedule: {{ .Values.backup.schedule | quote }}
   timeZone: {{ .Values.backup.timeZone | quote }}
@@ -32,9 +33,7 @@ spec:
             - name: backup
               image: {{ .Values.db.image }}
               securityContext:
-                allowPrivilegeEscalation: false
-                capabilities:
-                  drop: ["ALL"]
+                {{- include "taskboard.containerSecurity" . | nindent 16 }}
               command:
                 - sh
                 - -c
@@ -43,7 +42,7 @@ spec:
                   file=/backups/tasks-$(date +%Y%m%d-%H%M%S).sql.gz
                   pg_dump -h db -U $POSTGRES_USER -d $POSTGRES_DB --clean --if-exists | gzip > $file.part
                   mv $file.part $file
-                  find /backups -name 'tasks-*' -mtime +7 -delete
+                  find /backups -name 'tasks-*' -mtime +{{ .Values.backup.keepDays }} -delete
                   echo "Backup written: $file"
                   ls -lh /backups
               envFrom:
@@ -53,7 +52,7 @@ spec:
                 - name: PGPASSWORD
                   valueFrom:
                     secretKeyRef:
-                      name: {{ .Values.db.existingSecret }}
+                      name: {{ include "taskboard.dbSecret" . }}
                       key: POSTGRES_PASSWORD
               resources:
                 requests:
@@ -69,3 +68,4 @@ spec:
             - name: backups
               persistentVolumeClaim:
                 claimName: db-backups
+{{- end }}

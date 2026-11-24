@@ -35,16 +35,19 @@ Known limits: the backups live on the same machine as the data and are not encry
 (see [docs/security-gaps.md](docs/security-gaps.md)).
 
 ## Install with Helm
-The same TaskBoard is also packaged as a Helm chart in `charts/taskboard/` (chart `0.1.0`, app `0.2`).
-It is secure by default: with no values at all, every Pod is non-root with all capabilities dropped,
-every Service is internal, and the backup disk survives `helm uninstall`.
+The same TaskBoard is also packaged as a Helm chart in `charts/taskboard/` (chart `0.2.0`, app `0.2`).
+It is secure by default: with no values at all, every Pod is non-root with all capabilities dropped and a
+read-only root disk, every Service is internal, nightly backups are on, and the backup disk survives
+`helm uninstall`. Backups can be switched off (`backup.enabled`) and their age set (`backup.keepDays`).
 
 1. Make the namespace and the password Secret first (the chart never takes a password as a value):
    `kubectl create namespace taskboard-helm`, then
    `kubectl create secret generic db-secret -n taskboard-helm --from-env-file=secrets\db.env`
-2. Install: `helm install taskboard charts	askboard -n taskboard-helm`
-3. Check it before installing, without touching the cluster: `helm lint charts	askboard` and
-   `helm template taskboard charts	askboard -n taskboard-helm`
+2. Install: `helm install taskboard charts\taskboard -n taskboard-helm`
+3. Check it before installing, without touching the cluster: `helm lint charts\taskboard` and
+   `helm template taskboard charts\taskboard -n taskboard-helm`
+4. Lint it like a reviewer would: `kube-linter lint charts\taskboard` (no lint errors; the one ignored check
+   has its reason written on the object)
 
 ## When something breaks
 Run `.\scripts\status.ps1` first. It only reads: nodes, Pods, restarts with the last exit code, the Pods

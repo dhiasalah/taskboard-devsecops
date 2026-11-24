@@ -6,7 +6,7 @@ metadata:
   labels:
     app.kubernetes.io/name: taskboard-db
     app.kubernetes.io/component: database
-    app.kubernetes.io/part-of: taskboard
+    {{- include "taskboard.labels" . | nindent 4 }}
 spec:
   type: ClusterIP
   selector:

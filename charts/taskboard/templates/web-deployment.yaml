@@ -6,7 +6,9 @@ metadata:
   labels:
     app.kubernetes.io/name: taskboard-web
     app.kubernetes.io/component: web
-    app.kubernetes.io/part-of: taskboard
+    {{- include "taskboard.labels" . | nindent 4 }}
+  annotations:
+    ignore-check.kube-linter.io/no-anti-affinity: "Pods are spread with topologySpreadConstraints"
 spec:
   replicas: {{ .Values.web.replicas }}
   selector:
@@ -37,13 +39,14 @@ spec:
         - name: web
           image: {{ .Values.web.image }}
           securityContext:
-            allowPrivilegeEscalation: false
-            capabilities:
-              drop: ["ALL"]
+            {{- include "taskboard.containerSecurity" . | nindent 12 }}
           ports:
             - containerPort: 8080
           resources:
             {{- toYaml .Values.web.resources | nindent 12 }}
+          volumeMounts:
+            - name: tmp
+              mountPath: /tmp
           readinessProbe:
             httpGet:
               path: /
@@ -56,3 +59,6 @@ spec:
             periodSeconds: 10
             timeoutSeconds: 2
             failureThreshold: 3
+      volumes:
+        - name: tmp
+          emptyDir: {}

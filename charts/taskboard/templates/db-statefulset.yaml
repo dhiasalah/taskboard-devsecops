@@ -6,7 +6,7 @@ metadata:
   labels:
     app.kubernetes.io/name: taskboard-db
     app.kubernetes.io/component: database
-    app.kubernetes.io/part-of: taskboard
+    {{- include "taskboard.labels" . | nindent 4 }}
 spec:
   serviceName: db-headless
   replicas: 1
@@ -28,21 +28,23 @@ spec:
         - name: db
           image: {{ .Values.db.image }}
           securityContext:
-            allowPrivilegeEscalation: false
-            capabilities:
-              drop: ["ALL"]
+            {{- include "taskboard.containerSecurity" . | nindent 12 }}
           ports:
             - containerPort: 5432
           volumeMounts:
             - name: data
               mountPath: /var/lib/postgresql
+            - name: run
+              mountPath: /var/run/postgresql
+            - name: tmp
+              mountPath: /tmp
           resources:
             {{- toYaml .Values.db.resources | nindent 12 }}
           envFrom:
             - configMapRef:
                 name: db-config
             - secretRef:
-                name: {{ .Values.db.existingSecret }}
+                name: {{ include "taskboard.dbSecret" . }}
           startupProbe:
             exec:
               command: ["pg_isready", "-h", "127.0.0.1"]
@@ -57,6 +59,12 @@ spec:
               port: 5432
             periodSeconds: 10
             failureThreshold: 3
+      volumes:
+        - name: run
+          emptyDir: {}
+        - name: tmp
+          emptyDir: {}
+
   volumeClaimTemplates:
     - metadata:
         name: data

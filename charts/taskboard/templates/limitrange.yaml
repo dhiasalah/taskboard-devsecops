@@ -4,7 +4,7 @@ metadata:
   name: taskboard-limits
   namespace: {{ .Release.Namespace }}
   labels:
-    app.kubernetes.io/part-of: taskboard
+    {{- include "taskboard.labels" . | nindent 4 }}
 spec:
   limits:
     - type: Container

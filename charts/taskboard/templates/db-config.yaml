@@ -4,7 +4,7 @@ metadata:
   name: db-config
   namespace: {{ .Release.Namespace }}
   labels:
-    app.kubernetes.io/part-of: taskboard
+    {{- include "taskboard.labels" . | nindent 4 }}
 data:
   DB_HOST: db
   POSTGRES_DB: taskboard

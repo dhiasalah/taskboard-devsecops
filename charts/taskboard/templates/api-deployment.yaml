@@ -6,7 +6,10 @@ metadata:
   labels:
     app.kubernetes.io/name: taskboard-api
     app.kubernetes.io/component: api
-    app.kubernetes.io/part-of: taskboard
+    {{- include "taskboard.labels" . | nindent 4 }}
+  annotations:
+    ignore-check.kube-linter.io/no-anti-affinity: "Pods are spread with topologySpreadConstraints"
+
 spec:
   replicas: {{ .Values.api.replicas }} # <-- 2
   strategy:
@@ -42,17 +45,18 @@ spec:
         - name: api
           image: {{ .Values.api.image }} # <-- 4
           securityContext:
-            allowPrivilegeEscalation: false
-            capabilities:
-              drop: ["ALL"]
+            {{- include "taskboard.containerSecurity" . | nindent 12 }}
           ports:
             - containerPort: 5000
           resources: {{- toYaml .Values.api.resources | nindent 12 }} # <-- 5
+          volumeMounts:
+            - name: tmp
+              mountPath: /tmp
           envFrom:
             - configMapRef:
                 name: db-config
             - secretRef:
-                name: {{ .Values.db.existingSecret }} # <-- 6
+                name: {{ include "taskboard.dbSecret" . }} # <-- 6
           readinessProbe:
             httpGet:
               path: /health
@@ -65,3 +69,6 @@ spec:
             periodSeconds: 10
             timeoutSeconds: 2
             failureThreshold: 3
+      volumes:
+        - name: tmp
+          emptyDir: {}
