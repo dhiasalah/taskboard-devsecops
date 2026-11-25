@@ -1,0 +1,75 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: taskboard-api
+  annotations:
+    ignore-check.kube-linter.io/no-anti-affinity: "Pods are spread with topologySpreadConstraints (lesson 26)"
+spec:
+  template:
+    spec:
+      containers:
+        - name: api
+          securityContext:
+            readOnlyRootFilesystem: true
+          volumeMounts:
+            - name: tmp
+              mountPath: /tmp
+      volumes:
+        - name: tmp
+          emptyDir: {}
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: taskboard-web
+  annotations:
+    ignore-check.kube-linter.io/no-anti-affinity: "Pods are spread with topologySpreadConstraints (lesson 26)"
+spec:
+  template:
+    spec:
+      containers:
+        - name: web
+          securityContext:
+            readOnlyRootFilesystem: true
+          volumeMounts:
+            - name: tmp
+              mountPath: /tmp
+      volumes:
+        - name: tmp
+          emptyDir: {}
+---
+apiVersion: apps/v1
+kind: StatefulSet
+metadata:
+  name: taskboard-db
+spec:
+  template:
+    spec:
+      containers:
+        - name: db
+          securityContext:
+            readOnlyRootFilesystem: true
+          volumeMounts:
+            - name: run
+              mountPath: /var/run/postgresql
+            - name: tmp
+              mountPath: /tmp
+      volumes:
+        - name: run
+          emptyDir: {}
+        - name: tmp
+          emptyDir: {}
+---
+apiVersion: batch/v1
+kind: CronJob
+metadata:
+  name: db-backup
+spec:
+  jobTemplate:
+    spec:
+      template:
+        spec:
+          containers:
+            - name: backup
+              securityContext:
+                readOnlyRootFilesystem: true

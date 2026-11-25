@@ -12,9 +12,10 @@ if ((kind get clusters) -notcontains "taskboard") {
 kubectl config use-context kind-taskboard
 kubectl config set-context --current --namespace=taskboard
 
-kubectl apply -f k8s\namespace.yaml
+kubectl create namespace taskboard --dry-run=client -o yaml | kubectl apply -f -
 kubectl create secret generic db-secret -n taskboard --from-env-file=secrets\db.env --dry-run=client -o yaml | kubectl apply -f -
-kubectl apply -f k8s\
+kubectl apply -k k8s\overlays\prod
+
 
 Write-Host "Waiting for TaskBoard to be ready..."
 kubectl wait deployment --all -n taskboard --for=condition=Available --timeout=180s

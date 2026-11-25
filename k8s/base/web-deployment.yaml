@@ -2,7 +2,6 @@ apiVersion: apps/v1
 kind: Deployment
 metadata:
   name: taskboard-web
-  namespace: taskboard
   labels:
     app.kubernetes.io/name: taskboard-web
     app.kubernetes.io/component: web

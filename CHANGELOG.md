@@ -1,5 +1,20 @@
 # Changelog
 
+## v0.4 — Helm chart + Kustomize overlays
+
+- **Helm chart** `charts/taskboard/` (chart 0.2.0, app 0.2), running as the release `taskboard` in `taskboard-helm`
+  - Secure by default: non-root, drop ALL, read-only root disk, ClusterIP only, with no values at all
+  - Asks for the Secret's **name** (`existingSecret`), never the password; the backup disk survives `helm uninstall`
+  - Helpers in `_helpers.tpl`, a backup switch (`backup.enabled`) and a `backup.keepDays` knob
+- **Kustomize**: `k8s/` is now `base/` (10 shared files, no namespace inside) + `overlays/dev` + `overlays/prod`
+  - `dev` (`taskboard-dev`): 1 api, 1 web, its own empty database, no backups
+  - `prod` (`taskboard`): nightly backups, and `lock.yaml` gives **every container a read-only root disk**
+    (small `emptyDir` folders for `/tmp` and `/var/run/postgresql`)
+  - every object carries `environment=dev` or `environment=prod`, outside the selectors
+- **kube-linter** checks what is shipped: the prod overlay and the chart have no findings; the one ignored
+  check (`no-anti-affinity`, Pods are already spread) has its reason written on the object
+- `scripts/up.ps1` builds TaskBoard from the prod overlay (`kubectl apply -k k8s\overlays\prod`)
+
 ## v0.3 — Persistent DB, backups, non-root
 
 - Postgres is a **StatefulSet** (`taskboard-db-0`) with its own 1Gi disk (PVC): tasks survive restarts

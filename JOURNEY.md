@@ -188,3 +188,10 @@
 - Quiz 13/14: I missed the duplicate YAML key again. When the same key appears twice, YAML keeps only the **last** one, with no error.
 - Security note: `readOnlyRootFilesystem: true`. Before it, an attacker running as nginx's own user could drop a file into nginx's config folder; after it, `Read-only file system`. The apps get small `emptyDir` scratch folders (`/tmp`, `/var/run/postgresql`) for the few places they must write.
 - Project: chart `0.2.0` live in `taskboard-helm`: 3 helpers, a backup switch, a `keepDays` knob, every Pod read-only, kube-linter clean (exit code 0).
+## Lesson 30 — Kustomize (2026-11-25)
+- Learned: Kustomize is one recipe (`k8s/base/`) plus a sticky note per environment (`overlays/dev`, `overlays/prod`). No templates and no holes: the base is plain YAML that works alone, and each overlay only says what differs. `kubectl apply -k` builds and applies in one go, `kubectl diff -k` shows what would change first.
+- The base files had to lose their `namespace: taskboard` line, so each overlay can choose its own room. `labels:` with `pairs:` adds `environment=dev/prod` without touching the selectors; `commonLabels:` would have written it into them, and selectors can't change on a live Deployment.
+- Broke and fixed again: the same trap as the Helm values. Two `labels:` keys in one kustomization: the last one wins, silently.
+- Security note: prod is stricter than dev. `lock.yaml` gives every prod container a read-only root disk, so planting `evil.conf` in nginx now ends with `Read-only file system`, and TaskBoard still works. kube-linter: dev has 3 findings, prod none.
+- Practice 11/11: a `staging` overlay (2 api, 1 web, the same lock without the backup patch) on top of the same base, in its own `kustomize-practice` namespace. I kept it next to dev and prod, so its path to the base is just `../../base`.
+- Project: the real `taskboard` now comes from `overlays/prod` (my tasks kept), `taskboard-dev` runs next to it, `up.ps1` uses `-k`. Released as v0.4.

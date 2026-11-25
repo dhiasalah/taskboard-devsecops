@@ -27,6 +27,8 @@ break-in (**lateral movement**). That's why the plan adds many small locks (**de
 
 - **Every** Pod runs as non-root with a fixed UID (api 10001, web 101, db and backup jobs 70), with `allowPrivilegeEscalation: false` and all Linux capabilities dropped (v0.3)
 - The API can't rewrite its own code
+- In prod, **every** container has a read-only root disk (`readOnlyRootFilesystem: true`, small `emptyDir` scratch folders only where the app must write): an attacker inside a Pod can't drop a file into nginx's config or change the app (v0.4)
+- kube-linter checks what I ship: the prod overlay and the Helm chart have no findings (v0.4)
 - web and api Pods are spread over both workers: one node down doesn't take TaskBoard down (v0.3)
 - Images are pinned by digest (`name@sha256:...`), so a moved tag can't change what runs
 - Every container has requests and limits, plus a LimitRange, so a DoS stays inside one container

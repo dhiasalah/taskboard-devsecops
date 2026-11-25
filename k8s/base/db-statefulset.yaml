@@ -2,7 +2,6 @@ apiVersion: apps/v1
 kind: StatefulSet
 metadata:
   name: taskboard-db
-  namespace: taskboard
   labels:
     app.kubernetes.io/name: taskboard-db
     app.kubernetes.io/component: database

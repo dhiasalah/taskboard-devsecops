@@ -2,7 +2,6 @@ apiVersion: batch/v1
 kind: CronJob
 metadata:
   name: db-backup
-  namespace: taskboard
   labels:
     app.kubernetes.io/name: taskboard-db-backup
     app.kubernetes.io/component: backup
